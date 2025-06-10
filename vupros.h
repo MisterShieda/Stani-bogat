@@ -1,9 +1,11 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 
+#define MAX_LEN_TEXT 250
+
 typedef struct {
-    char question[200];       
-    char answers[4][128];    
+    char question[300];       
+    char answers[4][MAX_LEN_TEXT];    
     int correctAnswer;       
     int difficulty;          
 } question;
