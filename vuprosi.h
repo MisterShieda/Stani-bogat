@@ -1,17 +1,31 @@
+#ifndef QUESTION_H
+#define QUESTION_H
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "vupros.h"
 
-void loadQuestions(question *questions, int *count, const char *filename) {
+
+#define MAX_LEN_TEXT 250
+
+typedef struct {
+    char question[300];       
+    char answers[4][MAX_LEN_TEXT];    
+    int correctAnswer;       
+    int difficulty;          
+} question;
+
+
+void loadQuestions(question *questions, int count, const char *filename) {
     FILE *file = fopen(filename, "rb");
     if (!file) {
         perror("Грешка при четене.");
         return;
     }
 
-    fread(count, sizeof(int), 1, file);
-    fread(questions, sizeof(question), *count, file);
+    fread(&count, sizeof(int), 1, file);
+    fread(questions, sizeof(question), count, file);
 
     fclose(file);
 }
@@ -29,13 +43,13 @@ void saveQuestions(question *questions, int count, const char *filename) {
     fclose(file);
 }
 
-void addQuestionInteractive(question *questions, int *count) {
-    if (*count >= 200) {
+void addQuestionInteractive(question *questions, int count) {
+    if (count >= 200) {
         printf("Достигнат е максимален брой въпроси.\n");
         return;
     }
 
-    question *q = &questions[*count];
+    question *q = &questions[count];
 
     printf("Ваведете текст на въпроса:\n");
     fgets(q->question, MAX_LEN_TEXT, stdin);
@@ -55,7 +69,7 @@ void addQuestionInteractive(question *questions, int *count) {
     scanf("%d", &q->difficulty);
     getchar();
 
-    (*count)++;
+    count++;
     printf("Въпросът е добавен!\n");
 }
 
@@ -114,3 +128,4 @@ void editQuestionInteractive(question *questions, int count) {
 
     printf("Въпросът е редактиран!\n");
 }
+#endif
